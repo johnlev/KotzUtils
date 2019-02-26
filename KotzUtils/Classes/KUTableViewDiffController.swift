@@ -1,5 +1,5 @@
 //
-//  TableViewDiffController.swift
+//  KUTableViewDiffController.swift
 //  KotzUtils
 //
 //  Created by John Kotz on 2/25/19.
@@ -16,9 +16,9 @@ import FutureKit
  - Takes over table view data source, so doesn't support table views with other data sources
  */
 @available(iOS 11.0, *)
-public class TableViewDiffController<T: Hashable>: NSObject, UITableViewDataSource {
+public class KUTableViewDiffController<T: TableViewDiffControllerData>: NSObject, UITableViewDataSource {
     /// The data as it is shown on the table view
-    public private(set) var  data: [[T]]
+    public private(set) var data: [[T]]
     /// The table view being controlled
     public private(set) var tableView: UITableView
     /// Delegate to this controller (required to provide cells for each T item in the data)
@@ -74,7 +74,7 @@ public class TableViewDiffController<T: Hashable>: NSObject, UITableViewDataSour
         }
         
         activeUpdatePromise = Promise<Void>()
-        var diffs = newData.enumerated().map { Difference(before: data[$0.offset], after: $0.element) }
+        var diffs = newData.enumerated().map { KUDifference(before: data[$0.offset], after: $0.element) }
         data = newData
         
         // Do ALL the updates!
@@ -96,11 +96,41 @@ public class TableViewDiffController<T: Hashable>: NSObject, UITableViewDataSour
                 })
             }
         }) { (complete) in
-            if complete {
-                self.activeUpdatePromise!.completeWithSuccess(Void())
-            } else {
-                self.activeUpdatePromise!.completeWithFail("Didn't complete batch updates")
+            guard complete else {
+                self.activeUpdatePromise!.completeWithFail("Didn't complete batch updates successfully")
+                return
             }
+            
+            // Update all the unmoved cells in each section which have had their data changed since the value before
+            let futures = self.data.enumerated().flatMap({ (sectionTuple) -> [Future<Any>] in
+                let section = sectionTuple.offset
+                return diffs[section].unmoved.compactMap({ (rowTuple) -> Future<Any>? in
+                    let item = rowTuple.object // Unpack the tuple
+                    let row = rowTuple.index
+                    
+                    // Only continue if the item says it has changed (default true)
+                    guard item.changedSince(item: diffs[section].before[row]) else {
+                        return nil
+                    }
+                    
+                    // If the cell implements any of the protocols or classes, update it
+                    let cell = self.tableView.cellForRow(at: IndexPath(row: row, section: section))
+                    if let cell = cell as? KUTableViewDiffCell<T> {
+                        return cell.updateUI(animated: self.rowAnimation != .none, with: item).futureAny
+                    } else if let cell = cell as? KUUpdatableView {
+                        return cell.updateUI(animated: self.rowAnimation != .none).futureAny
+                    } else {
+                        return nil
+                    }
+                })
+            })
+            
+            // Wait for it all to be done
+            FutureBatch(futures).future.onSuccess(block: { (_) in
+                self.activeUpdatePromise!.completeWithSuccess(Void())
+            }).onFail(block: { (error) in
+                self.activeUpdatePromise?.completeWithFail(error)
+            })
         }
         
         // When the active update is done, start the waiting update (if any)
@@ -118,10 +148,10 @@ public class TableViewDiffController<T: Hashable>: NSObject, UITableViewDataSour
             }
         }
         
-        return activeUpdatePromise!.future
+        return activeUpdatePromise!.future.mainThreadFuture
     }
     
-    // MARK: - UITableViewDelegate
+    // MARK: - UITableViewDataSource
     
     private func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
@@ -134,8 +164,65 @@ public class TableViewDiffController<T: Hashable>: NSObject, UITableViewDataSour
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return delegate.tableViewDiffController(tableView, cellForItem: data[indexPath.section][indexPath.row])
     }
+    
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return delegate.tableView(tableView, titleForHeaderInSection: section)
+    }
+    
+    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return delegate.tableView(tableView, titleForFooterInSection: section)
+    }
+    
+    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return delegate.tableView(tableView, canEditRowAt: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return delegate.tableView(tableView, canMoveRowAt: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        delegate.tableView(tableView, commit: editingStyle, forRowAt: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        if (delegate.tableView(tableView, canMoveRowAt: sourceIndexPath)) {
+            let item = self.data[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+            self.data[destinationIndexPath.section].insert(item, at: destinationIndexPath.row)
+        }
+    }
+}
+
+public protocol TableViewDiffControllerData: Hashable {
+    
+}
+
+extension TableViewDiffControllerData {
+    func changedSince(item: Self) -> Bool {
+        return true
+    }
 }
 
 public protocol TableViewDiffControllerDelegate {
-    func tableViewDiffController(_ tableView: UITableView, cellForItem item: Any) -> UITableViewCell
+    func tableViewDiffController(_ tableView: UITableView, cellForItem item: Any) -> KUTableViewDiffCell<Any>
+}
+
+public extension TableViewDiffControllerDelegate {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return nil
+    }
+    
+    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    public func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) { }
 }

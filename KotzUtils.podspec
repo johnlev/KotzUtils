@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KotzUtils'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A series of utilities prefered by myself usefull for making a Swift iOS app very quickly'
 
 # This description is used to generate tags and improve search results.

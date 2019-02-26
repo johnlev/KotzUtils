@@ -1,9 +1,9 @@
 /**
  A struct that describes how an array has changed between two states.
  
- Used by the TableViewDiffController to describe how to change the table view between two data states.
+ Used by the KUTableViewDiffController to describe how to change the table view between two data states.
  */
-struct Difference<T:Hashable> {
+struct KUDifference<T:Hashable> {
     /// The data before the change
     public let before: [T]
     /// The data after the change
@@ -85,6 +85,16 @@ struct Difference<T:Hashable> {
             let indexBefore = before.firstIndex(of: object)!
             let indexAfter = after.firstIndex(of: object)!
             return informedIndexBefore != indexAfter ? (object, indexBefore, indexAfter) : nil
+        })
+    }()
+    
+    public lazy var unmoved: [(object: T, index: Int)] = {
+        var set = retainedObjects
+        moved.forEach({ (tuple) in
+            if set.contains(tuple.object) {set.remove(tuple.object)}
+        })
+        return set.map({ (data) -> (T, Int) in
+            return (data, self.after.firstIndex(of: data)!)
         })
     }()
     
