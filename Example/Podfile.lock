@@ -1,0 +1,51 @@
+PODS:
+  - EmitterKit (5.2.1)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - FutureKit (3.5.0)
+  - KotzUtils (0.1.0):
+    - EmitterKit
+    - FutureKit
+  - Nimble (7.0.3)
+  - Nimble-Snapshots (6.3.0):
+    - Nimble-Snapshots/Core (= 6.3.0)
+  - Nimble-Snapshots/Core (6.3.0):
+    - FBSnapshotTestCase (~> 2.0)
+    - Nimble (~> 7.0)
+  - Quick (1.2.0)
+
+DEPENDENCIES:
+  - FBSnapshotTestCase (~> 2.1.4)
+  - KotzUtils (from `../`)
+  - Nimble (~> 7.0.2)
+  - Nimble-Snapshots (~> 6.3.0)
+  - Quick (~> 1.2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - EmitterKit
+    - FBSnapshotTestCase
+    - FutureKit
+    - Nimble
+    - Nimble-Snapshots
+    - Quick
+
+EXTERNAL SOURCES:
+  KotzUtils:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  EmitterKit: 2a6818d291cb9f553d3cfdd6aba570bf62337f51
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  FutureKit: 91f6760df942278db387b05f19a9fdfbeb097df2
+  KotzUtils: 055e61095f2e62eecf582d194e22b696c30e04fd
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Nimble-Snapshots: f5459b5b091678dc942d03ec4741cacb58ba4a52
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+
+PODFILE CHECKSUM: cf1bc808c4f79a5102d2605063a557d07a3a67ac
+
+COCOAPODS: 1.6.1

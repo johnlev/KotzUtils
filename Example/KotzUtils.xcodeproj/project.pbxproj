@@ -28,8 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0E19D047F7CCF68A8A49632A /* KotzUtils.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = KotzUtils.podspec; path = ../KotzUtils.podspec; sourceTree = "<group>"; };
-		0F38E50944D204DD28DDC165 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		0E19D047F7CCF68A8A49632A /* KotzUtils.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = KotzUtils.podspec; path = ../KotzUtils.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		0F38E50944D204DD28DDC165 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		1F8F4E1A750F10EE9EEEAE44 /* Pods-KotzUtils_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KotzUtils_Example.release.xcconfig"; path = "Target Support Files/Pods-KotzUtils_Example/Pods-KotzUtils_Example.release.xcconfig"; sourceTree = "<group>"; };
 		4F0627745872750143B42408 /* Pods_KotzUtils_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KotzUtils_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* KotzUtils_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KotzUtils_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,7 +46,7 @@
 		88E4866601AA8B6807C0EAAF /* Pods_KotzUtils_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KotzUtils_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC6B4812D809749882E3117A /* Pods-KotzUtils_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KotzUtils_Tests.release.xcconfig"; path = "Target Support Files/Pods-KotzUtils_Tests/Pods-KotzUtils_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		BCEED8C4E9212B92AAB87717 /* Pods-KotzUtils_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KotzUtils_Tests.debug.xcconfig"; path = "Target Support Files/Pods-KotzUtils_Tests/Pods-KotzUtils_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		E3C6FA15F1C4592D4170407C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E3C6FA15F1C4592D4170407C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,7 +156,6 @@
 				BCEED8C4E9212B92AAB87717 /* Pods-KotzUtils_Tests.debug.xcconfig */,
 				AC6B4812D809749882E3117A /* Pods-KotzUtils_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -214,6 +213,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = JQ28K6Y7JE;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -300,12 +300,16 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KotzUtils_Example/Pods-KotzUtils_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/EmitterKit/EmitterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FutureKit/FutureKit.framework",
 				"${BUILT_PRODUCTS_DIR}/KotzUtils/KotzUtils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EmitterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FutureKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KotzUtils.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -511,7 +515,9 @@
 			baseConfigurationReference = 65DFFBCC59020989F51A04C2 /* Pods-KotzUtils_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JQ28K6Y7JE;
 				INFOPLIST_FILE = KotzUtils/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -526,7 +532,9 @@
 			baseConfigurationReference = 1F8F4E1A750F10EE9EEEAE44 /* Pods-KotzUtils_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JQ28K6Y7JE;
 				INFOPLIST_FILE = KotzUtils/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
